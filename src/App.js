@@ -51,7 +51,14 @@ export default class App extends React.Component {
 
   // Нажати на кнопку ВСЕ
   showAll = () => {
-    this.setState(({datas}) => {
+    this.setState(({datas, data}) => {
+      const liked = data.filter(item => item.like);
+      const newItem = [...liked];
+
+      if (newItem.length === 0) {
+        return;
+      }
+
       return {
         data: datas
       }
@@ -64,6 +71,7 @@ export default class App extends React.Component {
 
   searchPost = (term, items) => {
     if (term === 0) {
+      console.log('ку');
       return items;
     }
 
