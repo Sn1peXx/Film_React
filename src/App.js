@@ -4,6 +4,7 @@ import ItemList from './Components/ItemList/itemList';
 import data from './films';
 import FavoriteItem from './Components/FavoriteItem/favoriteItem';
 import SearchPanel from './Components/SearchPanel/searchPanel';
+import { Alert } from 'reactstrap';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -17,15 +18,15 @@ export default class App extends React.Component {
 
   // Нажатие на кнопке Like
   onLike = id => {
-    this.setState(({data}) => {
+    this.setState(({ data }) => {
 
       const index = data.findIndex(item => item.id === id);
 
       const old = data[index];
-      const newItem = {...old, like: !old.like};
+      const newItem = { ...old, like: !old.like };
 
       const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
-      
+
       return {
         data: newArr,
         datas: newArr
@@ -35,7 +36,7 @@ export default class App extends React.Component {
 
   // Нажатие на кноку Избранное
   showLike = () => {
-    this.setState(({data}) => {
+    this.setState(({ data }) => {
       const liked = data.filter(item => item.like);
       const newItem = [...liked];
 
@@ -51,7 +52,7 @@ export default class App extends React.Component {
 
   // Нажати на кнопку ВСЕ
   showAll = () => {
-    this.setState(({datas, data}) => {
+    this.setState(({ datas, data }) => {
       const liked = data.filter(item => item.like);
       const newItem = [...liked];
 
@@ -71,19 +72,18 @@ export default class App extends React.Component {
 
   searchPost = (term, items) => {
     if (term === 0) {
-      console.log('ку');
       return items;
     }
 
     return items.filter(item => {
-      const n = item.name.toLowerCase();
-      return n.indexOf(term.toLowerCase()) > -1;
+      const filmsNames = item.name.toLowerCase();
+      return filmsNames.indexOf(term.toLowerCase()) > -1;
     });
   }
 
   render() {
 
-    const {data, all, term} = this.state;
+    const { data, all, term } = this.state;
 
     // Поиск кол-ва понравившихся фильмов
     const liked = data.filter(item => item.like).length;
@@ -91,10 +91,21 @@ export default class App extends React.Component {
 
     const visiblePosts = this.searchPost(term, data);
 
+    if (visiblePosts.length === 0) {
+      return (
+        <div className="App">
+          <SearchPanel onUpdateSearch={this.onUpdateSearch} />
+          <Alert color="danger">
+            Нет подходящих результатов
+          </Alert>
+        </div>
+      )
+    }
+
     return (
       <div className="App">
-        <SearchPanel onUpdateSearch={this.onUpdateSearch}/>
-        <FavoriteItem liked={liked} all={all} showLike={this.showLike} showAll={this.showAll}/>
+        <SearchPanel onUpdateSearch={this.onUpdateSearch} />
+        <FavoriteItem liked={liked} all={all} showLike={this.showLike} showAll={this.showAll} />
         <ItemList data={visiblePosts} onLike={this.onLike} like={data.like} />
       </div>
     );
