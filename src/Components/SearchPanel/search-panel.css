@@ -1,0 +1,16 @@
+.btn-search {
+    float: right;
+    position: relative;
+    top: -37px;
+    left: 80px;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.text-search {
+    font-size: 25px;
+    font-weight: 600;
+}
